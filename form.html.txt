@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Enrollment Form</title>
+</head>
+<body>
+  <h2>Limited Seats! <strong>Enroll Now!!</strong></h2>
+  <form action="submit.php" method="post">
+    <label>Name</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>Mobile Number</label><br>
+    <input type="text" name="mobile" required><br><br>
+
+    <label>Email</label><br>
+    <input type="email" name="email" required><br><br>
+
+    <label>Education Qualification</label><br>
+    <input type="radio" name="education" value="10th Pass" required> 10th Pass<br>
+    <input type="radio" name="education" value="12th Pass"> 12th Pass<br>
+    <input type="radio" name="education" value="ITI"> ITI<br>
+    <input type="radio" name="education" value="Diploma"> Diploma<br>
+    <input type="radio" name="education" value="Degree"> Degree<br>
+    <input type="radio" name="education" value="Others"> Others<br><br>
+
+    <label>District</label><br>
+    <select name="district" required>
+      <option value="Ariyalur">Ariyalur</option>
+      <option value="Chennai">Chennai</option>
+      <option value="Coimbatore">Coimbatore</option>
+      <!-- Add other districts as needed -->
+    </select><br><br>
+
+    <!-- Dummy captcha display (since real reCAPTCHA needs JS + keys) -->
+    <input type="checkbox" required> I’m not a robot<br><br>
+
+    <button type="submit">Enroll Now!</button>
+  </form>
+</body>
+</html>
