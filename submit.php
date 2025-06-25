@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Connect to Neon PostgreSQL
-$conn = pg_connect("host=YOUR_HOST_HERE port=5432 dbname=neondb user=neondb_owner password=YOUR_PASSWORD sslmode=require");
+$conn = pg_connect("host=ep-lingering-scene-a8s5rpo2-pooler.eastus2.azure.neon.tech dbname=neondb user=neondb_owner password=npg_dPkt2AmE1UjD sslmode=require");
 
 if (!$conn) {
     die("Connection failed: " . pg_last_error());
