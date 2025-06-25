@@ -1,12 +1,10 @@
-FROM php:8.2-cli
+FROM php:8.2-apache
 
-# Install PostgreSQL extension
-RUN apt-get update && apt-get install -y libpq-dev && docker-php-ext-install pgsql
+# Install PostgreSQL support
+RUN apt-get update && apt-get install -y libpq-dev \
+  && docker-php-ext-install pgsql
 
-WORKDIR /var/www/html
+# Copy your code into Apache web root
+COPY . /var/www/html/
 
-COPY . .
-
-EXPOSE 10000
-
-CMD ["php", "-S", "0.0.0.0:10000"]
+EXPOSE 80
