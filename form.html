@@ -1,40 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Enrollment Form</title>
+  <meta charset="UTF-8">
+  <title>Register for TN AutoSkills</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+    input, select, button { display: block; margin-bottom: 10px; padding: 8px; width: 100%; }
+  </style>
 </head>
 <body>
-  <h2>Limited Seats! <strong>Enroll Now!!</strong></h2>
-  <form action="submit.php" method="post">
-    <label>Name</label><br>
-    <input type="text" name="name" required><br><br>
 
-    <label>Mobile Number</label><br>
-    <input type="text" name="mobile" required><br><br>
+  <h2>Register for TN AutoSkills</h2>
 
-    <label>Email</label><br>
-    <input type="email" name="email" required><br><br>
+  <form id="tnautoForm">
+    <input type="text" name="Name" placeholder="Full Name" required>
+    <input type="text" name="Mobile Number" placeholder="Mobile Number" required>
+    <input type="email" name="Email" placeholder="Email" required>
+    <input type="text" name="Education" placeholder="Education">
+    <input type="text" name="Qualification" placeholder="Qualification">
+    <input type="text" name="District" placeholder="District">
+    <input type="text" name="Course name" placeholder="Course Name" required>
 
-    <label>Education Qualification</label><br>
-    <input type="radio" name="education" value="10th Pass" required> 10th Pass<br>
-    <input type="radio" name="education" value="12th Pass"> 12th Pass<br>
-    <input type="radio" name="education" value="ITI"> ITI<br>
-    <input type="radio" name="education" value="Diploma"> Diploma<br>
-    <input type="radio" name="education" value="Degree"> Degree<br>
-    <input type="radio" name="education" value="Others"> Others<br><br>
+    <!-- Hidden fields for tracking -->
+    <input type="hidden" name="Form Name (ID)" value="TN-Form-001">
+    <input type="hidden" name="Submisssion ID" value="">
+    <input type="hidden" name="Created At" value="">
+    <input type="hidden" name="User ID" value="">
+    <input type="hidden" name="User Agent" value="">
+    <input type="hidden" name="User IP" value="">
+    <input type="hidden" name="Referrer" value="">
 
-    <label>District</label><br>
-    <select name="district" required>
-      <option value="Ariyalur">Ariyalur</option>
-      <option value="Chennai">Chennai</option>
-      <option value="Coimbatore">Coimbatore</option>
-      <!-- Add other districts as needed -->
-    </select><br><br>
-
-    <!-- Dummy captcha display (since real reCAPTCHA needs JS + keys) -->
-    <input type="checkbox" required> I’m not a robot<br><br>
-
-    <button type="submit">Enroll Now!</button>
+    <button type="submit">Submit Registration</button>
   </form>
+
+  <script>
+    const form = document.getElementById("tnautoForm");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      // Auto-fill tracking fields
+      formData.set("Created At", new Date().toISOString());
+      formData.set("User Agent", navigator.userAgent);
+      formData.set("Referrer", document.referrer);
+
+      fetch("https://api.ipify.org?format=json")
+        .then(res => res.json())
+        .then(data => {
+          formData.set("User IP", data.ip);
+
+          // ✅ Send data to Google Apps Script
+          fetch("https://script.google.com/macros/s/AKfycbyVO1ZpENFE-5WTwA0dW1n5qfUsVWoUhZGFnR-jRxJid19eBQ74LGcQXe6c7iusnwpf/exec", {
+            method: "POST",
+            body: formData
+          });
+
+          form.reset(); // Clear the form silently
+        });
+    });
+  </script>
+
 </body>
 </html>
