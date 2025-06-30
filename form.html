@@ -6,32 +6,31 @@
 <body>
   <h2>Limited Seats! Enroll Now!!</h2>
   <form id="tnForm">
-    <label for="name">Name:</label><br>
-    <input type="text" name="Name" required><br><br>
+    <label>Name:</label><br>
+    <input type="text" name="name" required><br><br>
 
-    <label for="mobile">Mobile Number:</label><br>
-    <input type="text" name="Mobile Number" required><br><br>
+    <label>Mobile Number:</label><br>
+    <input type="text" name="mobile" required><br><br>
 
-    <label for="email">Email:</label><br>
-    <input type="email" name="Email" required><br><br>
+    <label>Email:</label><br>
+    <input type="email" name="email" required><br><br>
 
-    <label for="education">Education Qualification:</label><br>
-    <input type="text" name="Education Qualification"><br><br>
+    <label>Education Qualification:</label><br>
+    <input type="text" name="education" required><br><br>
 
-    <label for="district">District:</label><br>
-    <input type="text" name="District"><br><br>
+    <label>District:</label><br>
+    <input type="text" name="district" required><br><br>
 
-    <label for="course">Course name:</label><br>
-    <input type="text" name="Course name" required><br><br>
+    <label>Course name:</label><br>
+    <input type="text" name="course" required><br><br>
 
-    <!-- Hidden fields automatically filled by JavaScript -->
-    <input type="hidden" name="Form Name (ID)" value="TNAutoSkillsForm-01">
-    <input type="hidden" name="Submisssion ID" id="submissionId">
-    <input type="hidden" name="Created At" id="createdAt">
-    <input type="hidden" name="User ID" id="userId">
-    <input type="hidden" name="User Agent" id="userAgent">
-    <input type="hidden" name="User IP" id="userIP">
-    <input type="hidden" name="Referrer" id="referrer">
+    <input type="hidden" name="form_id" value="TNAutoSkillsForm-01">
+    <input type="hidden" name="submission_id" id="submissionId">
+    <input type="hidden" name="created_at" id="createdAt">
+    <input type="hidden" name="user_id" id="userId">
+    <input type="hidden" name="user_agent" id="userAgent">
+    <input type="hidden" name="user_ip" id="userIP">
+    <input type="hidden" name="referrer" id="referrer">
 
     <button type="submit">Enroll Now!</button>
   </form>
@@ -42,14 +41,12 @@
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
-      // Fill dynamic fields
+      document.getElementById('submissionId').value = 'S' + Date.now();
       document.getElementById('createdAt').value = new Date().toLocaleString();
       document.getElementById('userId').value = 'User_' + Math.floor(Math.random() * 1000000);
       document.getElementById('userAgent').value = navigator.userAgent;
       document.getElementById('referrer').value = document.referrer;
-      document.getElementById('submissionId').value = 'S' + Date.now();
 
-      // Fetch IP address
       try {
         const ipRes = await fetch('https://api.ipify.org?format=json');
         const ipData = await ipRes.json();
@@ -58,18 +55,17 @@
         console.error('Failed to fetch IP:', err);
       }
 
-      // Send form data
-      const formData = new FormData(form);
       const scriptURL = 'https://script.google.com/macros/s/AKfycbxtN7W4MMTjKXaL_oVgWdU-IIK_T0NvKGIwvL7SVI6MiE6bDZL0ZNNOPyQD1vUs4mYo/exec';
+      const formData = new FormData(form);
 
       fetch(scriptURL, { method: 'POST', body: formData })
-        .then(response => {
-          alert('Submitted successfully!');
+        .then(() => {
+          alert('Form submitted successfully!');
           form.reset();
         })
         .catch(error => {
           console.error('Error!', error.message);
-          alert('Submission failed. Please try again.');
+          alert('Error submitting form');
         });
     });
   </script>
