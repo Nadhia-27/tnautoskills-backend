@@ -6,7 +6,7 @@
 <body>
   <h2>Register for TN AutoSkills</h2>
   <form id="registrationForm">
-    <label>Full Name:</label><br>
+    <label>Name:</label><br>
     <input type="text" name="name" required><br><br>
 
     <label>Mobile Number:</label><br>
@@ -24,7 +24,7 @@
     <label>Course Name:</label><br>
     <input type="text" name="course"><br><br>
 
-    <input type="hidden" name="formId" value="TNAutoskillForm-01">
+    <input type="hidden" name="form_id" value="TNAutoskillForm-01">
 
     <button type="submit">Submit</button>
   </form>
@@ -35,20 +35,27 @@
 
       const form = e.target;
       const formData = new FormData(form);
-      
-      // Add system info
-      formData.append("user-agent", navigator.userAgent);
+
+      // Add system fields
+      formData.append("user_agent", navigator.userAgent);
       formData.append("referrer", document.referrer);
 
-      const url = "https://script.google.com/macros/s/AKfycbxtN7W4MMTjKXaL_oVgWdU-IIK_T0NvKGIwvL7SVI6MiE6bDZL0ZNNOPyQD1vUs4mYo/exec"; // <== IMPORTANT
+      try {
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        const ipData = await ipRes.json();
+        formData.append("user_ip", ipData.ip);
+      } catch (err) {
+        formData.append("user_ip", "IP fetch failed");
+      }
 
-      const response = await fetch(url, {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbxtN7W4MMTjKXaL_oVgWdU-IIK_T0NvKGIwvL7SVI6MiE6bDZL0ZNNOPyQD1vUs4mYo/exec", {
         method: "POST",
         body: formData
       });
 
-      const text = await response.text();
-      alert(text);
+      const result = await response.text();
+      alert(result);
+      form.reset();
     });
   </script>
 </body>
