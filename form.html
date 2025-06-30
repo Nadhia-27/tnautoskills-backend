@@ -1,84 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>TN Auto Skills Registration</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-    input, button { width: 100%; padding: 10px; margin: 8px 0; }
-    label { font-weight: bold; }
-  </style>
+  <title>TN AutoSkills Registration</title>
 </head>
 <body>
-
-  <h2>Register for TN Auto Skills</h2>
-
+  <h2>Limited Seats! Enroll Now!!</h2>
   <form id="tnForm">
-    <label>Name</label>
-    <input type="text" name="Name" required>
+    <label for="name">Name:</label><br>
+    <input type="text" name="Name" required><br><br>
 
-    <label>Mobile Number</label>
-    <input type="text" name="Mobile Number" required>
+    <label for="mobile">Mobile Number:</label><br>
+    <input type="text" name="Mobile Number" required><br><br>
 
-    <label>Email</label>
-    <input type="email" name="Email" required>
+    <label for="email">Email:</label><br>
+    <input type="email" name="Email" required><br><br>
 
-    <label>Education Qualification</label>
-    <input type="text" name="Education Qualification">
+    <label for="education">Education Qualification:</label><br>
+    <input type="text" name="Education Qualification"><br><br>
 
-    <label>District</label>
-    <input type="text" name="District">
+    <label for="district">District:</label><br>
+    <input type="text" name="District"><br><br>
 
-    <label>Course name</label>
-    <input type="text" name="Course name" required>
+    <label for="course">Course name:</label><br>
+    <input type="text" name="Course name" required><br><br>
 
-    <!-- Hidden fields for backend tracking -->
+    <!-- Hidden fields automatically filled by JavaScript -->
     <input type="hidden" name="Form Name (ID)" value="TNAutoSkillsForm-01">
-    <input type="hidden" name="Submisssion ID" value="">
-    <input type="hidden" name="Created At" value="">
-    <input type="hidden" name="User ID" value="">
-    <input type="hidden" name="User Agent" value="">
-    <input type="hidden" name="User IP" value="">
-    <input type="hidden" name="Referrer" value="">
+    <input type="hidden" name="Submisssion ID" id="submissionId">
+    <input type="hidden" name="Created At" id="createdAt">
+    <input type="hidden" name="User ID" id="userId">
+    <input type="hidden" name="User Agent" id="userAgent">
+    <input type="hidden" name="User IP" id="userIP">
+    <input type="hidden" name="Referrer" id="referrer">
 
-    <button type="submit">Submit</button>
+    <button type="submit">Enroll Now!</button>
   </form>
 
   <script>
-    const form = document.getElementById("tnForm");
+    const form = document.getElementById('tnForm');
 
-    form.addEventListener("submit", function(e) {
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
 
+      // Fill dynamic fields
+      document.getElementById('createdAt').value = new Date().toLocaleString();
+      document.getElementById('userId').value = 'User_' + Math.floor(Math.random() * 1000000);
+      document.getElementById('userAgent').value = navigator.userAgent;
+      document.getElementById('referrer').value = document.referrer;
+      document.getElementById('submissionId').value = 'S' + Date.now();
+
+      // Fetch IP address
+      try {
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipRes.json();
+        document.getElementById('userIP').value = ipData.ip;
+      } catch (err) {
+        console.error('Failed to fetch IP:', err);
+      }
+
+      // Send form data
       const formData = new FormData(form);
+      const scriptURL = 'https://script.google.com/macros/s/AKfycbxtN7W4MMTjKXaL_oVgWdU-IIK_T0NvKGIwvL7SVI6MiE6bDZL0ZNNOPyQD1vUs4mYo/exec';
 
-      // Auto-fill hidden fields
-      formData.set("Created At", new Date().toISOString());
-      formData.set("User Agent", navigator.userAgent);
-      formData.set("Referrer", document.referrer);
-      formData.set("User ID", crypto.randomUUID());
-
-      // Get IP address
-      fetch("https://api.ipify.org?format=json")
-        .then(res => res.json())
-        .then(data => {
-          formData.set("User IP", data.ip);
-
-          // Send form data to Google Apps Script
-          fetch("https://script.google.com/macros/s/AKfycbxtN7W4MMTjKXaL_oVgWdU-IIK_T0NvKGIwvL7SVI6MiE6bDZL0ZNNOPyQD1vUs4mYo/exec", {
-            method: "POST",
-            body: formData
-          })
-          .then(() => {
-            alert("Form submitted successfully.");
-            form.reset();
-          })
-          .catch(() => {
-            alert("There was a problem submitting the form.");
-          });
+      fetch(scriptURL, { method: 'POST', body: formData })
+        .then(response => {
+          alert('Submitted successfully!');
+          form.reset();
+        })
+        .catch(error => {
+          console.error('Error!', error.message);
+          alert('Submission failed. Please try again.');
         });
     });
   </script>
-
 </body>
 </html>
