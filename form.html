@@ -2,27 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Register for TN AutoSkills</title>
+  <title>TN Auto Skills Registration</title>
   <style>
-    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
-    input, select, button { display: block; margin-bottom: 10px; padding: 8px; width: 100%; }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    input, button { width: 100%; padding: 10px; margin: 8px 0; }
+    label { font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <h2>Register for TN AutoSkills</h2>
+  <h2>Register for TN Auto Skills</h2>
 
-  <form id="tnautoForm">
-    <input type="text" name="Name" placeholder="Full Name" required>
-    <input type="text" name="Mobile Number" placeholder="Mobile Number" required>
-    <input type="email" name="Email" placeholder="Email" required>
-    <input type="text" name="Education" placeholder="Education">
-    <input type="text" name="Qualification" placeholder="Qualification">
-    <input type="text" name="District" placeholder="District">
-    <input type="text" name="Course name" placeholder="Course Name" required>
+  <form id="tnForm">
+    <label>Name</label>
+    <input type="text" name="Name" required>
 
-    <!-- Hidden fields for tracking -->
-    <input type="hidden" name="Form Name (ID)" value="TN-Form-001">
+    <label>Mobile Number</label>
+    <input type="text" name="Mobile Number" required>
+
+    <label>Email</label>
+    <input type="email" name="Email" required>
+
+    <label>Education Qualification</label>
+    <input type="text" name="Education Qualification">
+
+    <label>District</label>
+    <input type="text" name="District">
+
+    <label>Course name</label>
+    <input type="text" name="Course name" required>
+
+    <!-- Hidden fields for backend tracking -->
+    <input type="hidden" name="Form Name (ID)" value="TNAutoSkillsForm-01">
     <input type="hidden" name="Submisssion ID" value="">
     <input type="hidden" name="Created At" value="">
     <input type="hidden" name="User ID" value="">
@@ -30,34 +41,41 @@
     <input type="hidden" name="User IP" value="">
     <input type="hidden" name="Referrer" value="">
 
-    <button type="submit">Submit Registration</button>
+    <button type="submit">Submit</button>
   </form>
 
   <script>
-    const form = document.getElementById("tnautoForm");
+    const form = document.getElementById("tnForm");
 
     form.addEventListener("submit", function(e) {
       e.preventDefault();
 
       const formData = new FormData(form);
 
-      // Auto-fill tracking fields
+      // Auto-fill hidden fields
       formData.set("Created At", new Date().toISOString());
       formData.set("User Agent", navigator.userAgent);
       formData.set("Referrer", document.referrer);
+      formData.set("User ID", crypto.randomUUID());
 
+      // Get IP address
       fetch("https://api.ipify.org?format=json")
         .then(res => res.json())
         .then(data => {
           formData.set("User IP", data.ip);
 
-          // ✅ Send data to Google Apps Script
+          // Send form data to Google Apps Script
           fetch("https://script.google.com/macros/s/AKfycbxtN7W4MMTjKXaL_oVgWdU-IIK_T0NvKGIwvL7SVI6MiE6bDZL0ZNNOPyQD1vUs4mYo/exec", {
             method: "POST",
             body: formData
+          })
+          .then(() => {
+            alert("Form submitted successfully.");
+            form.reset();
+          })
+          .catch(() => {
+            alert("There was a problem submitting the form.");
           });
-
-          form.reset(); // Clear the form silently
         });
     });
   </script>
