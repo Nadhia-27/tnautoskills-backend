@@ -4,69 +4,51 @@
   <title>TN AutoSkills Registration</title>
 </head>
 <body>
-  <h2>Limited Seats! Enroll Now!!</h2>
-  <form id="tnForm">
-    <label>Name:</label><br>
+  <h2>Register for TN AutoSkills</h2>
+  <form id="registrationForm">
+    <label>Full Name:</label><br>
     <input type="text" name="name" required><br><br>
 
     <label>Mobile Number:</label><br>
     <input type="text" name="mobile" required><br><br>
 
     <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
+    <input type="email" name="email"><br><br>
 
     <label>Education Qualification:</label><br>
-    <input type="text" name="education" required><br><br>
+    <input type="text" name="education"><br><br>
 
     <label>District:</label><br>
-    <input type="text" name="district" required><br><br>
+    <input type="text" name="district"><br><br>
 
-    <label>Course name:</label><br>
-    <input type="text" name="course" required><br><br>
+    <label>Course Name:</label><br>
+    <input type="text" name="course"><br><br>
 
-    <input type="hidden" name="form_id" value="TNAutoSkillsForm-01">
-    <input type="hidden" name="submission_id" id="submissionId">
-    <input type="hidden" name="created_at" id="createdAt">
-    <input type="hidden" name="user_id" id="userId">
-    <input type="hidden" name="user_agent" id="userAgent">
-    <input type="hidden" name="user_ip" id="userIP">
-    <input type="hidden" name="referrer" id="referrer">
+    <input type="hidden" name="formId" value="TNAutoskillForm-01">
 
-    <button type="submit">Enroll Now!</button>
+    <button type="submit">Submit</button>
   </form>
 
   <script>
-    const form = document.getElementById('tnForm');
-
-    form.addEventListener('submit', async function (e) {
+    document.getElementById('registrationForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
-      document.getElementById('submissionId').value = 'S' + Date.now();
-      document.getElementById('createdAt').value = new Date().toLocaleString();
-      document.getElementById('userId').value = 'User_' + Math.floor(Math.random() * 1000000);
-      document.getElementById('userAgent').value = navigator.userAgent;
-      document.getElementById('referrer').value = document.referrer;
-
-      try {
-        const ipRes = await fetch('https://api.ipify.org?format=json');
-        const ipData = await ipRes.json();
-        document.getElementById('userIP').value = ipData.ip;
-      } catch (err) {
-        console.error('Failed to fetch IP:', err);
-      }
-
-      const scriptURL = 'https://script.google.com/macros/s/AKfycbxtN7W4MMTjKXaL_oVgWdU-IIK_T0NvKGIwvL7SVI6MiE6bDZL0ZNNOPyQD1vUs4mYo/exec';
+      const form = e.target;
       const formData = new FormData(form);
+      
+      // Add system info
+      formData.append("user-agent", navigator.userAgent);
+      formData.append("referrer", document.referrer);
 
-      fetch(scriptURL, { method: 'POST', body: formData })
-        .then(() => {
-          alert('Form submitted successfully!');
-          form.reset();
-        })
-        .catch(error => {
-          console.error('Error!', error.message);
-          alert('Error submitting form');
-        });
+      const url = "https://script.google.com/macros/s/AKfycbxtN7W4MMTjKXaL_oVgWdU-IIK_T0NvKGIwvL7SVI6MiE6bDZL0ZNNOPyQD1vUs4mYo/exec"; // <== IMPORTANT
+
+      const response = await fetch(url, {
+        method: "POST",
+        body: formData
+      });
+
+      const text = await response.text();
+      alert(text);
     });
   </script>
 </body>
